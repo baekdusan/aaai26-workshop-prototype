@@ -19,12 +19,12 @@ The interface follows a Canvas-mode paradigm inspired by ChatGPT Canvas:
 
 ## ✨ Key Features
 
-### Phase 1: Screenshot Upload
+### Screenshot Upload
 - Support for multiple screenshot uploads (up to 16 images)
 - Real-time image preview gallery
 - Automatic image encoding for API transmission
 
-### Phase 2: Design Representation Generation and Refinement
+### Design Representation Generation and Refinement
 - **Dashboard (Left)**: Displays task flow JSON structure including:
   - Screen identification and purpose
   - User activities per screen
@@ -35,7 +35,7 @@ The interface follows a Canvas-mode paradigm inspired by ChatGPT Canvas:
   - Answers questions without modifying JSON
   - Maintains conversation history
 
-### Phase 3: UX Issue Evaluation
+### UX Issue Evaluation
 - **Dashboard (Left)**: Displays identified UX issues with:
   - Issue descriptions
   - Violated heuristic principles
