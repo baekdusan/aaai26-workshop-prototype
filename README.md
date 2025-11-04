@@ -126,8 +126,8 @@ The application will launch at `http://localhost:7860`
 ├── requirements.txt                    # Python dependencies
 ├── prompt_dr_generator.md              # System prompt for DR Generator
 ├── prompt_heuristic_evaluator.md       # System prompt for Heuristic Evaluator
-├── Agent4_Terms_and_definitions.md     # Reference: terminology definitions
-├── Agent4_heuristics.md                # Reference: heuristic principles
+├── Terms_and_definitions.md            # Reference: terminology definitions
+├── heuristics.md                       # Reference: heuristic principles
 └── README.md                           # This file
 ```
 
