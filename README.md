@@ -38,15 +38,13 @@ This repository contains the prototype implementation based on our proposed MAS 
 
 ## 🏗️ System Architecture
 
-### Multi-Agent System Components
-
 ![System Architecture](architecture.jpeg)
 
-### Dual-Panel Interface Design
+The system consists of three key components:
 
-- **Left Panel**: Live-updating JSON dashboard displaying structured analysis results
-- **Right Panel**: Conversational AI agent for iterative refinement through natural language
-- **Correction Loops**: Human evaluators can modify outputs at any stage before proceeding
+- **Design Representation (DR) Generator**: Analyzes mobile app screenshots and generates structured task flow descriptions in JSON format
+- **Heuristic Evaluator**: Identifies UX issues by evaluating task flows against established heuristic principles
+- **Human Evaluator**: Iteratively refines and validates AI-generated outputs through natural language interaction at each phase
 
 ---
 
@@ -270,64 +268,6 @@ This prototype supports research in:
 
 ---
 
-## ⚠️ Limitations and Future Work
-
-### Current Limitations
-
-- **Image Limit**: Maximum 16 screenshots per evaluation (API constraint)
-- **Single Heuristic Focus**: Currently implements "suitability for the user's task" only
-- **Language**: Prompts in English; UI text preserved in original language
-- **Model Dependency**: Requires GPT-4o access
-
-### Future Directions
-
-- Extend to multiple heuristic principles (e.g., Nielsen's 10 usability heuristics)
-- Support for real-time collaborative evaluation with multiple human experts
-- Integration with design tools (Figma, Sketch, Adobe XD)
-- Longitudinal studies on long-term adoption and effectiveness
-
----
-
-## 📄 Citation
-
-If you use this prototype in your research, please cite:
-
-```bibtex
-@inproceedings{aaai26-ux-evaluation,
-  title={Human-AI Collaborative Mobile App UX Evaluation: A Multi-Agent System Architecture},
-  author={Anonymous},
-  booktitle={AAAI'26 Workshop},
-  year={2026}
-}
-```
-
----
-
-## 🤝 Contributing
-
-This is a research prototype developed for academic purposes. For questions, suggestions, or collaboration opportunities, please open an issue in this repository.
-
----
-
-## 📚 References
-
-- **Heuristic Evaluation**: Nielsen, J., & Molich, R. (1990). Heuristic evaluation of user interfaces.
-- **Multi-Agent Systems**: Wooldridge, M. (2009). An introduction to multiagent systems.
-- **Human-Centered AI**: Shneiderman, B. (2020). Human-centered artificial intelligence.
-- **MLLMs in HCI**: Recent advances in applying multimodal large language models to HCI tasks.
-
----
-
-## 🙏 Acknowledgments
-
-- Built with [Gradio](https://gradio.app/) for rapid prototyping
-- Powered by [OpenAI GPT-4o](https://platform.openai.com/docs/)
-- Heuristic principles adapted from established HCI literature
-- Evaluation methodology inspired by standard UX evaluation practices
-
----
-
 **Status**: Research Prototype
-**Version**: 1.0.0
 **Last Updated**: January 2025
 **Conference**: AAAI'26 Workshop Submission
