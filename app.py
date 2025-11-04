@@ -10,11 +10,11 @@ from utils import (
     client
 )
 
-# Phase 상태 관리: 1=이미지 업로드, 2=DR 생성 및 개선, 3=UX Issue 평가
+# Phase state management: 1=Image upload, 2=DR generation and refinement, 3=UX Issue evaluation
 phase_state = {
     "current": 1,
-    "images": None,  # 업로드된 이미지 저장
-    "dr_json": None,  # Phase 2에서 생성된 DR JSON
+    "images": None,  # Stores uploaded images
+    "dr_json": None,  # DR JSON generated in Phase 2
 }
 
 def start_dr_generation(images, progress=gr.Progress(track_tqdm=True)):
@@ -104,26 +104,26 @@ def start_dr_generation(images, progress=gr.Progress(track_tqdm=True)):
         print("[DEBUG] API call successful")
         progress(0.9, desc="Processing results...")
 
-        # Responses API는 response.output_text 사용
+        # Responses API uses response.output_text
         assistant_response = response.output_text
         print(f"[DEBUG] Response length: {len(assistant_response)} characters")
 
-        # JSON 추출
+        # Extract JSON
         dr_json = extract_dashboard_json(assistant_response)
         chat_message = remove_dashboard_tags(assistant_response)
 
-        # JSON이 없으면 전체 응답을 dashboard에 표시
+        # If no JSON found, display entire response in dashboard
         if dr_json is None:
             dr_json = assistant_response
             chat_message = "Design Representation has been generated. Please let me know if you'd like to make any modifications!"
 
-        # 상태 저장
+        # Save state
         phase_state["dr_json"] = dr_json
 
-        # 대시보드용 포맷팅
+        # Format for dashboard display
         dashboard_content = format_json_for_display(dr_json)
 
-        # 채팅 히스토리 (이미지 포함한 초기 메시지 저장)
+        # Chat history (save initial message including images)
         chat_history = [
             {
                 "role": "user",
@@ -140,9 +140,9 @@ def start_dr_generation(images, progress=gr.Progress(track_tqdm=True)):
         print("="*60 + "\n")
 
         return (
-            gr.update(visible=False),  # phase1 숨김
-            gr.update(visible=True),   # phase2 표시
-            gr.update(visible=False),  # phase3 유지 숨김
+            gr.update(visible=False),  # Hide phase1
+            gr.update(visible=True),   # Show phase2
+            gr.update(visible=False),  # Keep phase3 hidden
             dashboard_content,
             chat_history
         )
@@ -166,9 +166,9 @@ def start_dr_generation(images, progress=gr.Progress(track_tqdm=True)):
 **For Development:** Check terminal for full traceback
 """
         return (
-            gr.update(visible=True),   # phase1 유지
-            gr.update(visible=False),  # phase2 숨김
-            gr.update(visible=False),  # phase3 숨김
+            gr.update(visible=True),   # Keep phase1 visible
+            gr.update(visible=False),  # Hide phase2
+            gr.update(visible=False),  # Hide phase3
             error_message,
             [{"role": "assistant", "content": str(e)}]
         )
@@ -184,10 +184,10 @@ def chat_dr(message, history, dashboard_content):
     if not message:
         return history, dashboard_content
 
-    # 시스템 프롬프트 로드
+    # Load system prompt
     system_prompt = load_prompt("prompt_dr_generator.md") + CANVAS_INSTRUCTION
 
-    # 현재 JSON 상태를 컨텍스트에 포함
+    # Include current JSON state in context
     context_message = f"""Current Dashboard JSON:
 ```json
 {dashboard_content}
@@ -196,23 +196,23 @@ def chat_dr(message, history, dashboard_content):
 User message: {message}
 """
 
-    # 전체 대화 히스토리 구성 (Responses API 형식)
+    # Build complete conversation history (Responses API format)
     input_messages = []
 
-    # 기존 히스토리 추가
+    # Add existing history
     for msg in history:
         input_messages.append({
             "role": msg["role"],
             "content": msg["content"]
         })
 
-    # 새 사용자 메시지 추가
+    # Add new user message
     input_messages.append({
         "role": "user",
         "content": context_message
     })
 
-    # OpenAI Responses API 호출 (instructions 파라미터 사용)
+    # Call OpenAI Responses API (using instructions parameter)
     try:
         response = client.responses.create(
             model="gpt-4o",
@@ -222,20 +222,20 @@ User message: {message}
 
         assistant_response = response.output_text
 
-        # <dashboard> 태그 확인
+        # Check for <dashboard> tags
         updated_json = extract_dashboard_json(assistant_response)
         chat_message = remove_dashboard_tags(assistant_response)
 
-        # 피드백인 경우 (JSON 업데이트)
+        # If feedback (JSON update)
         if updated_json is not None:
             phase_state["dr_json"] = updated_json
             updated_dashboard = format_json_for_display(updated_json)
         else:
-            # 질문인 경우 (대시보드 유지)
+            # If question (maintain dashboard)
             updated_dashboard = dashboard_content
             chat_message = assistant_response
 
-        # 히스토리 업데이트
+        # Update history
         history.append({"role": "user", "content": message})
         history.append({"role": "assistant", "content": chat_message})
 
@@ -304,19 +304,19 @@ Please conduct heuristic evaluation and generate UX issues JSON."""}
         progress(0.9, desc="Processing results...")
         assistant_response = response.output_text
 
-        # JSON 추출
+        # Extract JSON
         ux_json = extract_dashboard_json(assistant_response)
         chat_message = remove_dashboard_tags(assistant_response)
 
-        # JSON이 없으면 전체 응답을 dashboard에 표시
+        # If no JSON found, display entire response in dashboard
         if ux_json is None:
             ux_json = assistant_response
             chat_message = "UX Issue analysis is complete. Please let me know if you have any questions or would like to make modifications!"
 
-        # 대시보드용 포맷팅
+        # Format for dashboard display
         dashboard_content = format_json_for_display(ux_json)
 
-        # 채팅 히스토리
+        # Chat history
         ux_chat_history = [
             {
                 "role": "user",
@@ -333,8 +333,8 @@ Please conduct heuristic evaluation and generate UX issues JSON."""}
         print("="*60 + "\n")
 
         return (
-            gr.update(visible=False),  # phase2 숨김
-            gr.update(visible=True),   # phase3 표시
+            gr.update(visible=False),  # Hide phase2
+            gr.update(visible=True),   # Show phase3
             dashboard_content,
             ux_chat_history
         )
@@ -371,23 +371,23 @@ def chat_ux(message, history, dashboard_content):
 User message: {message}
 """
 
-    # 전체 대화 히스토리 구성 (Responses API 형식)
+    # Build complete conversation history (Responses API format)
     input_messages = []
 
-    # 기존 히스토리 추가
+    # Add existing history
     for msg in history:
         input_messages.append({
             "role": msg["role"],
             "content": msg["content"]
         })
 
-    # 새 사용자 메시지 추가
+    # Add new user message
     input_messages.append({
         "role": "user",
         "content": context_message
     })
 
-    # OpenAI Responses API 호출 (instructions 파라미터 사용)
+    # Call OpenAI Responses API (using instructions parameter)
     try:
         response = client.responses.create(
             model="gpt-4o",
@@ -435,16 +435,16 @@ def download_ux_issues(dashboard_content):
     import tempfile
     import json
 
-    # JSON 파일로 저장
+    # Save as JSON file
     with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False, encoding='utf-8') as f:
-        # dashboard_content가 이미 JSON 문자열인 경우
+        # If dashboard_content is already a JSON string
         if isinstance(dashboard_content, str):
             try:
-                # JSON 형식 검증
+                # Validate JSON format
                 json_obj = json.loads(dashboard_content)
                 json.dump(json_obj, f, indent=2, ensure_ascii=False)
             except:
-                # JSON이 아니면 그냥 텍스트로 저장
+                # If not JSON, save as plain text
                 f.write(dashboard_content)
         else:
             json.dump(dashboard_content, f, indent=2, ensure_ascii=False)
@@ -472,14 +472,14 @@ def reset_app():
     print("="*60 + "\n")
 
     return (
-        gr.update(visible=True),   # phase1 표시
-        gr.update(visible=False),  # phase2 숨김
-        gr.update(visible=False),  # phase3 숨김
-        None,  # 이미지 클리어
-        "",    # 대시보드2 클리어
-        [],    # 챗봇2 클리어
-        "",    # 대시보드3 클리어
-        []     # 챗봇3 클리어
+        gr.update(visible=True),   # Show phase1
+        gr.update(visible=False),  # Hide phase2
+        gr.update(visible=False),  # Hide phase3
+        None,  # Clear images
+        "",    # Clear dashboard2
+        [],    # Clear chatbot2
+        "",    # Clear dashboard3
+        []     # Clear chatbot3
     )
 
 # Custom CSS for fixed-height dashboards
@@ -496,14 +496,14 @@ CUSTOM_CSS = """
 }
 """
 
-# Gradio 인터페이스 구성
+# Gradio interface configuration
 with gr.Blocks(title="2-Phase UX Evaluation System", css=CUSTOM_CSS) as demo:
 
-    # 제목 (항상 표시)
+    # Title (always visible)
     gr.Markdown("# Mobile App UX Evaluation System")
     gr.Markdown("## 2-Phase Heuristic Evaluation Service")
 
-    # Phase 1: 이미지 업로드
+    # Phase 1: Image upload
     with gr.Column(visible=True) as phase1:
         gr.Markdown("---")
         gr.Markdown("## Step 1: Screenshot Upload")
@@ -536,7 +536,7 @@ with gr.Blocks(title="2-Phase UX Evaluation System", css=CUSTOM_CSS) as demo:
         gr.Markdown("## Step 2: Design Representation Generation and Refinement")
 
         with gr.Row():
-            # 왼쪽: 대시보드
+            # Left: Dashboard
             with gr.Column(scale=1):
                 gr.Markdown("### 📊 Design Representation Dashboard")
                 dashboard2 = gr.Code(
@@ -547,7 +547,7 @@ with gr.Blocks(title="2-Phase UX Evaluation System", css=CUSTOM_CSS) as demo:
                     elem_id="dashboard2-code"
                 )
 
-            # 오른쪽: DR Generator 챗봇
+            # Right: DR Generator chatbot
             with gr.Column(scale=1):
                 gr.Markdown("### 💬 DR Generator")
                 chatbot2 = gr.Chatbot(
@@ -572,7 +572,7 @@ with gr.Blocks(title="2-Phase UX Evaluation System", css=CUSTOM_CSS) as demo:
         gr.Markdown("## Step 3: UX Issue Evaluation")
 
         with gr.Row():
-            # 왼쪽: 대시보드
+            # Left: Dashboard
             with gr.Column(scale=1):
                 gr.Markdown("### 📊 UX Issue Dashboard")
                 dashboard3 = gr.Code(
@@ -583,7 +583,7 @@ with gr.Blocks(title="2-Phase UX Evaluation System", css=CUSTOM_CSS) as demo:
                     elem_id="dashboard3-code"
                 )
 
-            # 오른쪽: Heuristic Evaluator 챗봇
+            # Right: Heuristic Evaluator chatbot
             with gr.Column(scale=1):
                 gr.Markdown("### 💬 Heuristic Evaluator")
                 chatbot3 = gr.Chatbot(
@@ -602,16 +602,16 @@ with gr.Blocks(title="2-Phase UX Evaluation System", css=CUSTOM_CSS) as demo:
         download_btn = gr.Button("📥 Download UX Issues", variant="secondary", size="lg")
         reset_btn = gr.Button("🔄 Reset", variant="secondary")
 
-    # 이벤트 핸들러
+    # Event handlers
 
-    # 이미지 업로드 시 프리뷰 업데이트
+    # Update preview when images are uploaded
     image_input.change(
         fn=lambda files: files if files else [],
         inputs=[image_input],
         outputs=[image_preview]
     )
 
-    # DR 생성 시작 (Phase 1 -> Phase 2)
+    # Start DR generation (Phase 1 -> Phase 2)
     generate_btn.click(
         fn=start_dr_generation,
         inputs=[image_input],
@@ -620,7 +620,7 @@ with gr.Blocks(title="2-Phase UX Evaluation System", css=CUSTOM_CSS) as demo:
         api_name="start_dr_generation"
     )
 
-    # Phase 2: DR Generator와 대화
+    # Phase 2: Chat with DR Generator
     chat_input2.submit(
         fn=chat_dr,
         inputs=[chat_input2, chatbot2, dashboard2],
@@ -630,7 +630,7 @@ with gr.Blocks(title="2-Phase UX Evaluation System", css=CUSTOM_CSS) as demo:
         outputs=[chat_input2]
     )
 
-    # DR 확정 (Phase 2 -> Phase 3)
+    # Confirm DR (Phase 2 -> Phase 3)
     confirm_dr_btn.click(
         fn=confirm_dr,
         inputs=[dashboard2],
@@ -638,7 +638,7 @@ with gr.Blocks(title="2-Phase UX Evaluation System", css=CUSTOM_CSS) as demo:
         show_progress="full"
     )
 
-    # Phase 3: Heuristic Evaluator와 대화
+    # Phase 3: Chat with Heuristic Evaluator
     chat_input3.submit(
         fn=chat_ux,
         inputs=[chat_input3, chatbot3, dashboard3],
@@ -648,14 +648,14 @@ with gr.Blocks(title="2-Phase UX Evaluation System", css=CUSTOM_CSS) as demo:
         outputs=[chat_input3]
     )
 
-    # UX 이슈 다운로드
+    # Download UX issues
     download_btn.click(
         fn=download_ux_issues,
         inputs=[dashboard3],
         outputs=[gr.File()]
     )
 
-    # 초기화
+    # Reset application
     reset_btn.click(
         fn=reset_app,
         outputs=[phase1, phase2, phase3, image_input, dashboard2, chatbot2, dashboard3, chatbot3]

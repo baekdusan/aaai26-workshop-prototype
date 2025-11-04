@@ -54,14 +54,12 @@ Follow these steps in order:
 	      "problem_description": "The flow for customizing the Home Screen requires multiple manual steps, including accessing a hidden menu and navigating away from the main screen.",
 	      "heuristic_violated": "The interactive system should provide the user with the controls and task-related information needed for each step of the task.",
 	      "reasoning": "Editing the home layout is a critical customization task but is buried under non-intuitive menu layers, increasing effort and possibly discouraging users.", // Explain why you identified this problem based on the violated heuristic
-	      "importance_score": "6, because it considerably hinders goal achievement in the context of ~", // Rate importance of each issue in terms of its potential impact on user goal achievement from 1 (Very low impact) to 7 (Very high impact) score. and explain how you determined the score
 	      "recommendation": "Provide a visible shortcut (e.g., a 'Customize' button) directly on the Home Screen to streamline this essential task."
 	    }, {
 	      "issue_id": "FLOW-UX-02",
 	      "problem_description": "Users must manually add the 'Exercise' module before starting a workout if it's not preloaded, adding unnecessary steps.",
 	      "heuristic_violated": "Avoid imposing steps on the user that are derived from the technology rather than from the needs of the task itself.",
 	      "reasoning": "This structure assumes the user knows to add a module before starting a workout—an unnecessary dependency that stems from internal module design logic.",
-	      "importance_score": "6",
 	      "recommendation": "Make essential modules like 'Exercise' always accessible without manual customization, or auto-suggest them when needed."
 	    },
       ]
@@ -78,7 +76,6 @@ Follow these steps in order:
 	      "problem_description": "Additional items include many sold out items, which may cause frustration at the beginning of the task.",
 	      "heuristic_violated": "The interactive system should provide the user with the controls and task-related information needed for each step of the task.",
 		“reasoning”: “Users need to see available products to make purchases, but seeing many sold-out items first creates frustration and wastes time.” // Explain why you identified this problem based on the violated heuristic
-	      "importance_score": “4, because it hinders goal achievement but doesn't completely block it.” // Rate importance of each issue in terms of its potential impact on user goal achievement from 1 (Very low impact) to 7 (Very high impact) score. and explain how you determined the score
 	"recommendation": "Filter out sold-out items by default, or visually de-emphasize them to guide user attention to available products."
 	    },
 	    {
@@ -92,20 +89,3 @@ Follow these steps in order:
 - After each group, pause and wait for the user's confirmation before proceeding.
 - Repeat until the full task flow has been evaluated and the analysis is complete.
 - Incorporate any user feedback before continuing.
-
-# IMPORTANT LANGUAGE INSTRUCTION
-**You MUST write all descriptions, explanations, and analysis in English.**
-However, **preserve UI labels and text exactly as they appear in the screenshots** (keep Korean, Chinese, Japanese, etc. as-is).
-
-Rules:
-- **UI text references**: Keep original language when mentioning specific labels (e.g., "오류가 발생했습니다", "홈으로")
-- **Problem descriptions**: Write in English
-- **Heuristic violations**: Write in English
-- **Reasoning and recommendations**: Write in English
-- **Chat messages**: Respond in English only
-
-Examples:
-- ❌ BAD: "An error message saying 'An error has occurred' is displayed"
-- ✅ GOOD: "An error message '오류가 발생했습니다' is displayed without explanation of what went wrong"
-- ✅ GOOD: "problem_description": "The '구매하기' button is disabled without any indication why"
-- ✅ GOOD: "recommendation": "Add helper text below the '구매하기' button to explain prerequisites"

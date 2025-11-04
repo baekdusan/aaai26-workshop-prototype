@@ -7,22 +7,22 @@ import json
 import re
 from openai import OpenAI
 
-# OpenAI Client 초기화
+# Initialize OpenAI Client
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def load_prompt(filename):
-    """프롬프트 파일 로드"""
+    """Load prompt file"""
     filepath = os.path.join(os.path.dirname(__file__), filename)
     with open(filepath, 'r', encoding='utf-8') as f:
         return f.read()
 
 def encode_image_to_base64(image_path):
-    """이미지를 base64로 인코딩"""
+    """Encode image to base64"""
     with open(image_path, "rb") as image_file:
         return base64.b64encode(image_file.read()).decode('utf-8')
 
 def prepare_image_messages(image_paths):
-    """여러 이미지를 OpenAI Responses API 형식으로 변환"""
+    """Convert multiple images to OpenAI Responses API format"""
     image_contents = []
     for img_path in image_paths:
         base64_image = encode_image_to_base64(img_path)
@@ -33,33 +33,33 @@ def prepare_image_messages(image_paths):
     return image_contents
 
 def extract_dashboard_json(response_text):
-    """응답에서 <dashboard> 태그 안의 JSON 추출"""
+    """Extract JSON from within <dashboard> tags in response"""
     match = re.search(r'<dashboard>(.*?)</dashboard>', response_text, re.DOTALL)
     if match:
         json_str = match.group(1).strip()
-        # JSON 코드 블록 제거 (```json ... ```)
+        # Remove JSON code block markers (```json ... ```)
         json_str = re.sub(r'^```json\s*', '', json_str)
         json_str = re.sub(r'\s*```$', '', json_str)
         try:
             return json.loads(json_str)
         except json.JSONDecodeError as e:
             print(f"JSON parsing error: {e}")
-            return json_str  # 파싱 실패 시 원본 반환
+            return json_str  # Return original string if parsing fails
     return None
 
 def remove_dashboard_tags(response_text):
-    """응답에서 <dashboard> 태그 제거하고 채팅 메시지만 반환"""
+    """Remove <dashboard> tags from response and return only chat message"""
     cleaned = re.sub(r'<dashboard>.*?</dashboard>', '', response_text, flags=re.DOTALL)
     return cleaned.strip()
 
 def format_json_for_display(json_obj):
-    """JSON을 보기 좋게 포맷팅"""
+    """Format JSON for display"""
     if isinstance(json_obj, str):
         return json_obj
     return json.dumps(json_obj, indent=2, ensure_ascii=False)
 
 
-# Canvas 모드 지시사항
+# Canvas mode instructions
 CANVAS_INSTRUCTION = """
 
 ## Output Format (IMPORTANT):

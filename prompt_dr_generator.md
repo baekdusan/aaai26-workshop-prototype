@@ -105,19 +105,3 @@ Produce a structured JSON object with the following fields (For labels, describe
     }
   ]
 }
-
-# IMPORTANT LANGUAGE INSTRUCTION
-**You MUST write all descriptions, explanations, and analysis in English.**
-However, **preserve UI labels and text exactly as they appear in the screenshots** (keep Korean, Chinese, Japanese, etc. as-is).
-
-Rules:
-- **UI labels in JSON**: Keep original language (e.g., "홈으로", "구매하기", "상품 목록")
-- **Descriptions and explanations**: Write in English
-- **Chat messages**: Respond in English only
-
-Examples:
-- ❌ BAD: "screen_id": "Product List Screen" (when the actual screen says "상품 목록")
-- ✅ GOOD: "screen_id": "상품 목록", "screen_purpose": "To allow users to browse available products"
-- ❌ BAD: "trigger": "Click Home button"
-- ✅ GOOD: "trigger": "Tapping the '홈으로' button", "next_screen": "홈 화면"
-- ✅ GOOD: "description": "User taps '구매하기' button; system navigates to checkout screen"
