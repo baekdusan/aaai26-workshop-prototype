@@ -230,39 +230,6 @@ Both agents use file search to access:
 
 ---
 
-## 📈 Performance Metrics
-
-### Computational Efficiency
-
-- **Phase 1 (DR Generation)**: 1-2 minutes for 5-10 screenshots
-- **Phase 2 (Heuristic Evaluation)**: 1-2 minutes per task flow
-- **Total Time**: ~3-4 minutes per complete evaluation (vs. hours for manual evaluation)
-
-### Token Usage
-
-- DR Generation: ~5,000-10,000 tokens (including images)
-- Refinement iterations: ~500-2,000 tokens each
-- Heuristic Evaluation: ~8,000-15,000 tokens (including images)
-
-### Cost Estimate
-
-- **Per Evaluation**: $0.10 - $0.50 (GPT-4o pricing)
-- **Significantly reduces** expert time cost while maintaining quality
-
----
-
-## 🔬 Research Applications
-
-This prototype supports research in:
-
-1. **Human-AI Collaboration**: Investigating effective collaboration patterns in UX evaluation
-2. **Multi-Agent Systems**: Exploring sequential agent coordination for complex tasks
-3. **Explainable AI**: Demonstrating transparent reasoning through structured outputs
-4. **Automated UX Evaluation**: Advancing MLLM-based UX assessment methods
-5. **Interactive Machine Learning**: Studying human-in-the-loop refinement processes
-
----
-
 **Status**: Research Prototype
 **Last Updated**: January 2025
 **Conference**: AAAI'26 Workshop Submission
