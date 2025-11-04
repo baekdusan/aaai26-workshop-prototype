@@ -1,79 +1,98 @@
-# Mobile App UX Evaluation System
+# Human-AI Collaborative Mobile App UX Evaluation System
 
-**2-Phase Heuristic Evaluation Service**
+**A Multi-Agent System Architecture for Automated Heuristic Evaluation**
 
-A research prototype for evaluating mobile app user experience through AI-assisted heuristic evaluation. This system features a Canvas-mode interface where users can iteratively refine Design Representations and UX issue analyses through natural language conversation.
+> **Research Prototype** for AAAI'26 Workshop Submission
+> Demonstrating human-centered AI through iterative human-AI collaboration in UX evaluation
 
-> **Note**: This is a prototype developed for the AAAI'26 Workshop submission.
+---
 
-## 🎯 Overview
+## Abstract
 
-This system implements a 2-phase evaluation workflow:
+Heuristic evaluation is a widely used method for assessing and improving mobile app UX designs but remains resource-intensive, requiring human experts. Recent efforts to automate this process using multimodal large language models (MLLMs) show promise but continue to face challenges in reliability and transparency, which may stem from limited human–AI collaboration.
 
-1. **Design Representation (DR) Generation**: Analyzes screenshots to create structured task flow descriptions
-2. **Heuristic Evaluation**: Identifies UX issues based on established heuristic principles
+To address these issues, we propose a **multi-agent system (MAS) architecture** integrating two specialized MLLM agents—the **Design Representation Generator** and the **Heuristic Evaluator**—with a human evaluator through **iterative Correction and Adjustment Loops**. This architecture enhances reliability and transparency through sequential, structured analysis steps and iterative human-AI interaction loops, embodying human-centered AI principles by positioning AI as a collaborator rather than a replacement.
 
-The interface follows a Canvas-mode paradigm inspired by ChatGPT Canvas:
-- **Left Panel**: Live-updating JSON dashboard
-- **Right Panel**: Conversational AI agent for refinement and inquiry
+This repository contains the prototype implementation based on our proposed MAS architecture, developed using GPT-4o with Retrieval-Augmented Generation and an interactive dual-panel interface.
 
-## ✨ Key Features
+---
 
-### Screenshot Upload
-- Support for multiple screenshot uploads (up to 16 images)
-- Real-time image preview gallery
-- Automatic image encoding for API transmission
+## 🎯 Research Contributions
 
-### Design Representation Generation and Refinement
-- **Dashboard (Left)**: Displays task flow JSON structure including:
-  - Screen identification and purpose
-  - User activities per screen
-  - Interaction sequences
-  - Navigational triggers
-- **DR Generator (Right)**: Conversational agent that:
-  - Responds to feedback by updating JSON
-  - Answers questions without modifying JSON
-  - Maintains conversation history
+### 1. Multi-Agent System (MAS) Architecture
+- **Design Representation Generator Agent**: Analyzes mobile app screenshots to create structured task flow descriptions
+- **Heuristic Evaluator Agent**: Identifies UX issues based on established heuristic principles
+- **Sequential Analysis Pipeline**: Structured two-phase workflow ensuring systematic evaluation
 
-### UX Issue Evaluation
-- **Dashboard (Left)**: Displays identified UX issues with:
-  - Issue descriptions
-  - Violated heuristic principles
-  - Importance scores (1-7 scale)
-  - Recommendations
-- **Heuristic Evaluator (Right)**: Conversational agent that:
-  - Refines issue descriptions based on feedback
-  - Explains heuristic violations
-  - Adjusts importance scores
-- JSON export functionality for identified issues
+### 2. Human-Centered AI Collaboration
+- **Iterative Correction and Adjustment Loops**: Enables human evaluators to refine and validate AI outputs at each phase
+- **Interactive Dual-Panel Interface**: Combines live-updating JSON dashboards with conversational AI agents
+- **Canvas-Mode Paradigm**: Distinguishes between modification requests and informational queries for seamless interaction
 
-## 🔧 Technical Architecture
+### 3. Enhanced Reliability and Transparency
+- **Structured Analysis Steps**: Breaks down complex evaluation into manageable, verifiable stages
+- **Retrieval-Augmented Generation (RAG)**: Grounds evaluations in established UX terminology and heuristic principles
+- **Explicit Reasoning**: AI agents provide justifications for identified issues based on violated heuristics
 
-### Core Technologies
-- **Framework**: Gradio 5.x
-- **LLM API**: OpenAI Responses API
-- **Model**: GPT-4o
-- **Language**: Python 3.10+
+---
 
-### API Design
-- Uses OpenAI's Responses API (latest generation)
-- System prompts via `instructions` parameter
-- Base64 image encoding for screenshot analysis
-- Conversational context maintenance across turns
+## 🏗️ System Architecture
 
-### Canvas Mode Implementation
-The system employs a custom Canvas instruction that enables the LLM to:
-1. Distinguish between modification requests and informational queries
-2. Output JSON updates within `<dashboard>` tags when appropriate
-3. Provide conversational responses for questions
+### Multi-Agent System Components
 
-## 📋 Requirements
+![System Architecture](architecture.jpeg)
+
+### Dual-Panel Interface Design
+
+- **Left Panel**: Live-updating JSON dashboard displaying structured analysis results
+- **Right Panel**: Conversational AI agent for iterative refinement through natural language
+- **Correction Loops**: Human evaluators can modify outputs at any stage before proceeding
+
+---
+
+## 🔬 Key Technical Features
+
+### 1. Retrieval-Augmented Generation (RAG)
+- **Terminology Definitions** (`Terms_and_definitions.md`): Establishes shared vocabulary for task flow analysis
+- **Heuristic Principles** (`heuristics.md`): Provides evidence-based evaluation criteria
+- **File Search Integration**: AI agents access reference documents during analysis
+
+### 2. Structured Prompt Engineering
+- **Design Representation Generator Prompt**: Guides systematic screenshot analysis and task flow modeling
+- **Heuristic Evaluator Prompt**: Directs two-phase evaluation (flow-level and interaction-level)
+- **Canvas Mode Instructions**: Enables intelligent distinction between feedback and questions
+
+### 3. Multi-Modal LLM Integration
+- **Model**: GPT-4o (multimodal capabilities for screenshot analysis)
+- **API**: OpenAI Responses API with system-level instructions
+- **Image Processing**: Base64 encoding for up to 16 screenshots per evaluation
+
+### 4. Interactive Refinement Mechanisms
+- **Intent Recognition**: Automatically classifies user messages as modification requests or questions
+- **Dynamic Updates**: JSON outputs update in real-time based on human feedback
+- **Conversation History**: Maintains context across multiple refinement iterations
+
+---
+
+## 📊 Evaluation Results
+
+Our prototype was evaluated on **5 task scenarios** from **4 smartphone apps**, generating **35 UX issues**. Expert review by **4 UX professionals** demonstrated:
+
+- **85%** Factual Accuracy
+- **97%** Task Scenario Relevance
+- **74%** Expert Alignment
+
+These results indicate that our human-AI collaborative approach, supported by the MAS architecture, achieves **efficient and robust UX evaluation** while **reducing expert workload** and **preserving transparency**.
+
+---
+
+## 🚀 Installation and Setup
+
+### Prerequisites
 
 - Python 3.10 or higher
 - OpenAI API key with access to GPT-4o
-- Dependencies listed in `requirements.txt`
-
-## 🚀 Installation and Setup
+- Conda or virtualenv (recommended)
 
 ### 1. Clone the Repository
 
@@ -103,228 +122,212 @@ Set your OpenAI API key as an environment variable:
 export OPENAI_API_KEY="your-api-key-here"
 ```
 
-Alternatively, create a `.env` file:
-
-```bash
-echo "OPENAI_API_KEY=your-api-key-here" > .env
-```
-
 ### 5. Run the Application
 
 ```bash
 python app.py
 ```
 
-The application will launch at `http://localhost:7860`
+The web interface will launch at `http://localhost:7860`
+
+---
 
 ## 📁 Project Structure
 
 ```
 .
-├── app.py                              # Main Gradio application
-├── utils.py                            # Utility functions (API calls, parsing)
+├── app.py                              # Main Gradio application with MAS implementation
+├── utils.py                            # Utility functions (API calls, JSON parsing)
 ├── requirements.txt                    # Python dependencies
-├── prompt_dr_generator.md              # System prompt for DR Generator
-├── prompt_heuristic_evaluator.md       # System prompt for Heuristic Evaluator
-├── Terms_and_definitions.md            # Reference: terminology definitions
-├── heuristics.md                       # Reference: heuristic principles
+│
+├── prompt_dr_generator.md              # System prompt for DR Generator agent
+├── prompt_heuristic_evaluator.md       # System prompt for Heuristic Evaluator agent
+│
+├── Terms_and_definitions.md            # RAG: UX terminology definitions
+├── heuristics.md                       # RAG: Heuristic evaluation principles
+│
 └── README.md                           # This file
 ```
 
-## 🎨 Usage Guide
+---
 
-### Step 1: Upload Screenshots
-1. Navigate to the upload section
-2. Select multiple screenshots showing a task flow (in sequence)
-3. Click "Generate Design Representation"
-   - **Note**: A progress bar will appear showing the analysis status
-   - Expected time: 1-2 minutes
+## 🎨 Usage Workflow
 
-### Step 2: Refine Design Representation
-- **Review** the generated task flow JSON in the left dashboard
-- **Interact** with the DR Generator via the chat interface:
-  - **Feedback example**: "Make the screen_purpose more specific"
-  - **Question example**: "What does user_activities represent?"
-- Click "Confirm DR and Start UX Issue Analysis" when satisfied
-   - **Note**: A progress bar will appear showing the evaluation status
-   - Expected time: 1-2 minutes
+### Phase 1: Design Representation Generation
 
-### Step 3: Evaluate UX Issues
-- **Review** identified UX issues in the left dashboard
-- **Interact** with the Heuristic Evaluator:
-  - **Feedback example**: "The importance_score seems too low"
-  - **Question example**: "Why is this issue critical?"
-- Click "Download UX Issues" to export the analysis
+1. **Upload Screenshots**: Select multiple screenshots showing a complete task flow
+2. **AI Analysis**: DR Generator agent analyzes screens and generates structured task flow JSON
+3. **Human Refinement**: Review and refine the generated design representation through natural language
+4. **Validation**: Confirm when the design representation accurately captures the task flow
 
-## 📊 Visual Feedback & Monitoring
+**Output**: Structured JSON containing:
+- Screen identifications and purposes
+- User activities per screen
+- Interaction sequences
+- Navigational triggers
 
-### Progress Indicators
+### Phase 2: Heuristic Evaluation
 
-The system provides visual feedback for all user actions:
+1. **Automatic Transition**: Confirmed DR automatically feeds into Heuristic Evaluator
+2. **Two-Level Analysis**:
+   - **Flow-Level**: Identifies issues across the entire task journey
+   - **Interaction-Level**: Detects issues within specific screen interactions
+3. **Human Refinement**: Adjust issue descriptions, severity scores, and recommendations
+4. **Export**: Download final UX issues as JSON
 
-- **Generate Design Representation Button**: Full progress bar with status updates
-  - "Processing images..." (0%)
-  - "Loading prompts..." (20%)
-  - "Encoding images..." (40%)
-  - "AI analysis in progress... (1-2 minutes)" (60%)
-  - "Processing results..." (90%)
-
-- **Confirm DR and Start UX Issue Analysis Button**: Full progress bar with status updates
-  - "Preparing UX Issue analysis..." (0%)
-  - "Preparing images and DR data..." (30%)
-  - "Conducting heuristic evaluation... (1-2 minutes)" (50%)
-  - "Processing results..." (90%)
-
-- **Chat Inputs**: Real-time processing (Gradio's default UI feedback)
-- **Download Button**: Instant operation
-- **Reset Button**: Instant operation
-
-### Terminal Logging
-
-**For development and debugging purposes**, all button clicks and execution statuses are logged to the terminal. You can monitor the application's behavior in real-time:
-
-```bash
-============================================================
-🔘 BUTTON CLICKED: Generate Design Representation
-⏳ STATUS: Starting DR generation process...
-============================================================
-
-... (detailed execution logs) ...
-
-============================================================
-✅ SUCCESS: DR generation completed
-============================================================
-```
-
-**Logged Events**:
-- ✅ **Button Clicks**: Generate DR, Confirm DR, Download, Reset
-- 💬 **Chat Submissions**: DR Generator and Heuristic Evaluator
-- ⏳ **Execution Status**: Start, In Progress, Completed
-- 📝 **User Messages**: First 100 characters of chat input
-- 📁 **File Operations**: Download file paths
-
-**How to Monitor**:
-1. Run the application: `python app.py`
-2. Keep the terminal window visible
-3. Observe logs as you interact with the UI
-
-**Example Log Output**:
-```
-============================================================
-🔘 BUTTON CLICKED: Generate Design Representation
-⏳ STATUS: Starting DR generation process...
-============================================================
-
-[DEBUG] Received images: ['/path/to/image1.png', '/path/to/image2.png']
-[DEBUG] Images type: <class 'list'>
-[DEBUG] Processed image paths: ['/path/to/image1.png', '/path/to/image2.png']
-[DEBUG] System prompt loaded successfully
-[DEBUG] Prepared 2 images for API
-[DEBUG] Calling OpenAI Responses API...
-[DEBUG] API call successful
-[DEBUG] Response length: 3456 characters
-
-============================================================
-✅ SUCCESS: DR generation completed
-============================================================
-
-============================================================
-💬 CHAT INPUT SUBMITTED: DR Generator
-⏳ STATUS: Processing user message...
-📝 Message: Make the screen_purpose more detailed
-============================================================
-
-============================================================
-✅ SUCCESS: DR chat response completed
-============================================================
-```
-
-## 🤖 Canvas Mode Behavior
-
-### Automatic Intent Recognition
-
-The LLM automatically classifies user messages as either:
-
-**Modification Request** → Updates JSON + Provides explanation
-- Indicators: "change", "update", "fix", "modify", "make it more..."
-- Output: `<dashboard>updated JSON</dashboard>` + explanation
-
-**Informational Query** → Maintains JSON + Provides answer
-- Indicators: "what", "why", "how", "explain", "tell me about..."
-- Output: Conversational answer only
-
-### Example Interactions
-
-```
-User: "Make the screen_purpose more detailed"
-→ Dashboard: JSON updated with enhanced screen_purpose
-→ Chat: "I've updated the screen_purpose to provide more detail."
-
-User: "What does navigational_interaction mean?"
-→ Dashboard: No change
-→ Chat: "Navigational_interaction refers to the user action that..."
-```
-
-## 🔬 Customization
-
-### Modifying Evaluation Criteria
-
-Edit the prompt files to adjust evaluation logic:
-- `prompt_dr_generator.md`: Customize DR structure and analysis approach
-- `prompt_heuristic_evaluator.md`: Modify heuristic principles and severity criteria
-
-### Changing the Model
-
-Edit `app.py` to use different models:
-```python
-response = client.responses.create(
-    model="gpt-4o",  # Change to gpt-4o-mini, gpt-4-turbo, etc.
-    instructions=system_prompt,
-    input=initial_input
-)
-```
-
-### Adjusting Canvas Instructions
-
-Modify `CANVAS_INSTRUCTION` in `utils.py` to change how the LLM handles updates vs. queries.
-
-## 💰 Cost Considerations
-
-**GPT-4o Pricing** (as of deployment):
-- Input: $2.50 per 1M tokens
-- Output: $10.00 per 1M tokens
-
-**Typical Usage**:
-- Initial DR generation: ~5,000-10,000 tokens (with images)
-- Refinement turns: ~500-2,000 tokens each
-- UX evaluation: ~8,000-15,000 tokens (with images)
-
-**Estimated cost per full evaluation**: $0.10 - $0.50
-
-## ⚠️ Limitations and Considerations
-
-- **Image Limit**: Maximum 16 screenshots per evaluation (OpenAI API constraint)
-- **Token Usage**: Images consume significant tokens via base64 encoding
-- **Model Availability**: Requires access to GPT-4o model
-- **Language**: Prompts are in English; UI labels in screenshots are preserved in original language
-- **Evaluation Quality**: Dependent on screenshot quality and task flow clarity
-
-## 📄 License
-
-This project is released under the MIT License. See `LICENSE` file for details.
-
-## 🤝 Contributing
-
-This is a research prototype for academic purposes.
-
-## 🙏 Acknowledgments
-
-- Built with [Gradio](https://gradio.app/)
-- Powered by [OpenAI Responses API](https://platform.openai.com/docs/)
-- Heuristic principles adapted from established HCI literature
+**Output**: Structured JSON containing:
+- Problem descriptions
+- Violated heuristic principles
+- Importance scores (1-7 scale)
+- Actionable recommendations
 
 ---
 
-**Version**: 1.0.0
-**Last Updated**: October 2025
+## 🔧 Technical Implementation Details
+
+### Multi-Agent Coordination
+
+```python
+# Phase 1: DR Generator Agent
+# Input: Screenshots only
+response = client.responses.create(
+    model="gpt-4o",
+    instructions=dr_generator_prompt + canvas_instruction,
+    input=[{
+        "role": "user",
+        "content": [{"type": "input_text", "text": "Analyze screenshots..."}] + screenshot_images
+    }]
+)
+
+# Phase 2: Heuristic Evaluator Agent
+# Input: Screenshots + DR JSON from Phase 1
+response = client.responses.create(
+    model="gpt-4o",
+    instructions=heuristic_evaluator_prompt + canvas_instruction,
+    input=[{
+        "role": "user",
+        "content": [
+            {"type": "input_text", "text": f"Task Flow JSON:\n{dr_json}\n\nAnalyze UX issues..."}
+        ] + screenshot_images
+    }]
+)
+```
+
+### Canvas Mode Interaction
+
+**Modification Request Detection**:
+```
+User: "Make the screen_purpose more specific"
+→ AI updates JSON + provides explanation
+→ Output: <dashboard>updated_json</dashboard> + chat message
+```
+
+**Informational Query Detection**:
+```
+User: "What does navigational_interaction mean?"
+→ AI maintains JSON + answers question
+→ Output: Conversational response only
+```
+
+### Retrieval-Augmented Generation
+
+Both agents use file search to access:
+- `Terms_and_definitions.md`: Ensures consistent terminology
+- `heuristics.md`: Grounds evaluation in established UX principles
+
+---
+
+## 📈 Performance Metrics
+
+### Computational Efficiency
+
+- **Phase 1 (DR Generation)**: 1-2 minutes for 5-10 screenshots
+- **Phase 2 (Heuristic Evaluation)**: 1-2 minutes per task flow
+- **Total Time**: ~3-4 minutes per complete evaluation (vs. hours for manual evaluation)
+
+### Token Usage
+
+- DR Generation: ~5,000-10,000 tokens (including images)
+- Refinement iterations: ~500-2,000 tokens each
+- Heuristic Evaluation: ~8,000-15,000 tokens (including images)
+
+### Cost Estimate
+
+- **Per Evaluation**: $0.10 - $0.50 (GPT-4o pricing)
+- **Significantly reduces** expert time cost while maintaining quality
+
+---
+
+## 🔬 Research Applications
+
+This prototype supports research in:
+
+1. **Human-AI Collaboration**: Investigating effective collaboration patterns in UX evaluation
+2. **Multi-Agent Systems**: Exploring sequential agent coordination for complex tasks
+3. **Explainable AI**: Demonstrating transparent reasoning through structured outputs
+4. **Automated UX Evaluation**: Advancing MLLM-based UX assessment methods
+5. **Interactive Machine Learning**: Studying human-in-the-loop refinement processes
+
+---
+
+## ⚠️ Limitations and Future Work
+
+### Current Limitations
+
+- **Image Limit**: Maximum 16 screenshots per evaluation (API constraint)
+- **Single Heuristic Focus**: Currently implements "suitability for the user's task" only
+- **Language**: Prompts in English; UI text preserved in original language
+- **Model Dependency**: Requires GPT-4o access
+
+### Future Directions
+
+- Extend to multiple heuristic principles (e.g., Nielsen's 10 usability heuristics)
+- Support for real-time collaborative evaluation with multiple human experts
+- Integration with design tools (Figma, Sketch, Adobe XD)
+- Longitudinal studies on long-term adoption and effectiveness
+
+---
+
+## 📄 Citation
+
+If you use this prototype in your research, please cite:
+
+```bibtex
+@inproceedings{aaai26-ux-evaluation,
+  title={Human-AI Collaborative Mobile App UX Evaluation: A Multi-Agent System Architecture},
+  author={Anonymous},
+  booktitle={AAAI'26 Workshop},
+  year={2026}
+}
+```
+
+---
+
+## 🤝 Contributing
+
+This is a research prototype developed for academic purposes. For questions, suggestions, or collaboration opportunities, please open an issue in this repository.
+
+---
+
+## 📚 References
+
+- **Heuristic Evaluation**: Nielsen, J., & Molich, R. (1990). Heuristic evaluation of user interfaces.
+- **Multi-Agent Systems**: Wooldridge, M. (2009). An introduction to multiagent systems.
+- **Human-Centered AI**: Shneiderman, B. (2020). Human-centered artificial intelligence.
+- **MLLMs in HCI**: Recent advances in applying multimodal large language models to HCI tasks.
+
+---
+
+## 🙏 Acknowledgments
+
+- Built with [Gradio](https://gradio.app/) for rapid prototyping
+- Powered by [OpenAI GPT-4o](https://platform.openai.com/docs/)
+- Heuristic principles adapted from established HCI literature
+- Evaluation methodology inspired by standard UX evaluation practices
+
+---
+
 **Status**: Research Prototype
+**Version**: 1.0.0
+**Last Updated**: January 2025
+**Conference**: AAAI'26 Workshop Submission
