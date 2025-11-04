@@ -1,9 +1,4 @@
-# Human-AI Collaborative Mobile App UX Evaluation System
-
-**A Multi-Agent System Architecture for Automated Heuristic Evaluation**
-
-> **Research Prototype** for AAAI'26 Workshop Submission
-> Demonstrating human-centered AI through iterative human-AI collaboration in UX evaluation
+# Human–Agent Teaming for UX Heuristic Evaluation in Mobile Apps: A Multi-Agent System Approach
 
 ---
 
