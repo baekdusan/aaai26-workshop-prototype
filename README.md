@@ -52,7 +52,7 @@ The interface follows a Canvas-mode paradigm inspired by ChatGPT Canvas:
 ### Core Technologies
 - **Framework**: Gradio 5.x
 - **LLM API**: OpenAI Responses API
-- **Model**: GPT-5-nano (optimized for cost-efficiency)
+- **Model**: GPT-4o
 - **Language**: Python 3.10+
 
 ### API Design
@@ -70,7 +70,7 @@ The system employs a custom Canvas instruction that enables the LLM to:
 ## 📋 Requirements
 
 - Python 3.10 or higher
-- OpenAI API key with access to GPT-5-nano
+- OpenAI API key with access to GPT-4o
 - Dependencies listed in `requirements.txt`
 
 ## 🚀 Installation and Setup
@@ -78,8 +78,8 @@ The system employs a custom Canvas instruction that enables the LLM to:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/aaai26-workshop-prototype.git
-cd aaai26-workshop-prototype
+git clone <repository-url>
+cd prototype_AAAI-26
 ```
 
 ### 2. Create Virtual Environment
@@ -137,6 +137,8 @@ The application will launch at `http://localhost:7860`
 1. Navigate to the upload section
 2. Select multiple screenshots showing a task flow (in sequence)
 3. Click "Generate Design Representation"
+   - **Note**: A progress bar will appear showing the analysis status
+   - Expected time: 1-2 minutes
 
 ### Step 2: Refine Design Representation
 - **Review** the generated task flow JSON in the left dashboard
@@ -144,6 +146,8 @@ The application will launch at `http://localhost:7860`
   - **Feedback example**: "Make the screen_purpose more specific"
   - **Question example**: "What does user_activities represent?"
 - Click "Confirm DR and Start UX Issue Analysis" when satisfied
+   - **Note**: A progress bar will appear showing the evaluation status
+   - Expected time: 1-2 minutes
 
 ### Step 3: Evaluate UX Issues
 - **Review** identified UX issues in the left dashboard
@@ -151,6 +155,89 @@ The application will launch at `http://localhost:7860`
   - **Feedback example**: "The importance_score seems too low"
   - **Question example**: "Why is this issue critical?"
 - Click "Download UX Issues" to export the analysis
+
+## 📊 Visual Feedback & Monitoring
+
+### Progress Indicators
+
+The system provides visual feedback for all user actions:
+
+- **Generate Design Representation Button**: Full progress bar with status updates
+  - "Processing images..." (0%)
+  - "Loading prompts..." (20%)
+  - "Encoding images..." (40%)
+  - "AI analysis in progress... (1-2 minutes)" (60%)
+  - "Processing results..." (90%)
+
+- **Confirm DR and Start UX Issue Analysis Button**: Full progress bar with status updates
+  - "Preparing UX Issue analysis..." (0%)
+  - "Preparing images and DR data..." (30%)
+  - "Conducting heuristic evaluation... (1-2 minutes)" (50%)
+  - "Processing results..." (90%)
+
+- **Chat Inputs**: Real-time processing (Gradio's default UI feedback)
+- **Download Button**: Instant operation
+- **Reset Button**: Instant operation
+
+### Terminal Logging
+
+**For development and debugging purposes**, all button clicks and execution statuses are logged to the terminal. You can monitor the application's behavior in real-time:
+
+```bash
+============================================================
+🔘 BUTTON CLICKED: Generate Design Representation
+⏳ STATUS: Starting DR generation process...
+============================================================
+
+... (detailed execution logs) ...
+
+============================================================
+✅ SUCCESS: DR generation completed
+============================================================
+```
+
+**Logged Events**:
+- ✅ **Button Clicks**: Generate DR, Confirm DR, Download, Reset
+- 💬 **Chat Submissions**: DR Generator and Heuristic Evaluator
+- ⏳ **Execution Status**: Start, In Progress, Completed
+- 📝 **User Messages**: First 100 characters of chat input
+- 📁 **File Operations**: Download file paths
+
+**How to Monitor**:
+1. Run the application: `python app.py`
+2. Keep the terminal window visible
+3. Observe logs as you interact with the UI
+
+**Example Log Output**:
+```
+============================================================
+🔘 BUTTON CLICKED: Generate Design Representation
+⏳ STATUS: Starting DR generation process...
+============================================================
+
+[DEBUG] Received images: ['/path/to/image1.png', '/path/to/image2.png']
+[DEBUG] Images type: <class 'list'>
+[DEBUG] Processed image paths: ['/path/to/image1.png', '/path/to/image2.png']
+[DEBUG] System prompt loaded successfully
+[DEBUG] Prepared 2 images for API
+[DEBUG] Calling OpenAI Responses API...
+[DEBUG] API call successful
+[DEBUG] Response length: 3456 characters
+
+============================================================
+✅ SUCCESS: DR generation completed
+============================================================
+
+============================================================
+💬 CHAT INPUT SUBMITTED: DR Generator
+⏳ STATUS: Processing user message...
+📝 Message: Make the screen_purpose more detailed
+============================================================
+
+============================================================
+✅ SUCCESS: DR chat response completed
+============================================================
+```
 
 ## 🤖 Canvas Mode Behavior
 
@@ -191,7 +278,7 @@ Edit the prompt files to adjust evaluation logic:
 Edit `app.py` to use different models:
 ```python
 response = client.responses.create(
-    model="gpt-5",  # Change to gpt-5, gpt-5-mini, etc.
+    model="gpt-4o",  # Change to gpt-4o-mini, gpt-4-turbo, etc.
     instructions=system_prompt,
     input=initial_input
 )
@@ -203,22 +290,22 @@ Modify `CANVAS_INSTRUCTION` in `utils.py` to change how the LLM handles updates 
 
 ## 💰 Cost Considerations
 
-**GPT-5-nano Pricing** (as of deployment):
-- Input: $0.05 per 1M tokens
-- Output: $0.40 per 1M tokens
+**GPT-4o Pricing** (as of deployment):
+- Input: $2.50 per 1M tokens
+- Output: $10.00 per 1M tokens
 
 **Typical Usage**:
 - Initial DR generation: ~5,000-10,000 tokens (with images)
 - Refinement turns: ~500-2,000 tokens each
 - UX evaluation: ~8,000-15,000 tokens (with images)
 
-**Estimated cost per full evaluation**: $0.01 - $0.05
+**Estimated cost per full evaluation**: $0.10 - $0.50
 
 ## ⚠️ Limitations and Considerations
 
 - **Image Limit**: Maximum 16 screenshots per evaluation (OpenAI API constraint)
 - **Token Usage**: Images consume significant tokens via base64 encoding
-- **Model Availability**: Requires access to GPT-5-nano model
+- **Model Availability**: Requires access to GPT-4o model
 - **Language**: Prompts are in English; UI labels in screenshots are preserved in original language
 - **Evaluation Quality**: Dependent on screenshot quality and task flow clarity
 
@@ -228,7 +315,7 @@ This project is released under the MIT License. See `LICENSE` file for details.
 
 ## 🤝 Contributing
 
-This is a research prototype. For questions or collaboration inquiries, please contact [dusanisbaek@gmail.com].
+This is a research prototype for academic purposes.
 
 ## 🙏 Acknowledgments
 

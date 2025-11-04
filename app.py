@@ -19,6 +19,11 @@ phase_state = {
 
 def start_dr_generation(images, progress=gr.Progress(track_tqdm=True)):
     """Phase 1 -> Phase 2: DR Generation Start"""
+    print("\n" + "="*60)
+    print("🔘 BUTTON CLICKED: Generate Design Representation")
+    print("⏳ STATUS: Starting DR generation process...")
+    print("="*60 + "\n")
+
     progress(0, desc="Processing images...")
 
     print(f"[DEBUG] Received images: {images}")
@@ -92,7 +97,7 @@ def start_dr_generation(images, progress=gr.Progress(track_tqdm=True)):
     # OpenAI Responses API call (using instructions parameter)
     try:
         response = client.responses.create(
-            model="gpt-5-nano",
+            model="gpt-4o",
             instructions=system_prompt,
             input=initial_input
         )
@@ -130,6 +135,10 @@ def start_dr_generation(images, progress=gr.Progress(track_tqdm=True)):
             }
         ]
 
+        print("\n" + "="*60)
+        print("✅ SUCCESS: DR generation completed")
+        print("="*60 + "\n")
+
         return (
             gr.update(visible=False),  # phase1 숨김
             gr.update(visible=True),   # phase2 표시
@@ -166,6 +175,12 @@ def start_dr_generation(images, progress=gr.Progress(track_tqdm=True)):
 
 def chat_dr(message, history, dashboard_content):
     """Phase 2: DR Generator와 대화"""
+    print("\n" + "="*60)
+    print("💬 CHAT INPUT SUBMITTED: DR Generator")
+    print(f"⏳ STATUS: Processing user message...")
+    print(f"📝 Message: {message[:100]}..." if len(message) > 100 else f"📝 Message: {message}")
+    print("="*60 + "\n")
+
     if not message:
         return history, dashboard_content
 
@@ -200,7 +215,7 @@ User message: {message}
     # OpenAI Responses API 호출 (instructions 파라미터 사용)
     try:
         response = client.responses.create(
-            model="gpt-5-nano",
+            model="gpt-4o",
             instructions=system_prompt,
             input=input_messages
         )
@@ -224,6 +239,10 @@ User message: {message}
         history.append({"role": "user", "content": message})
         history.append({"role": "assistant", "content": chat_message})
 
+        print("\n" + "="*60)
+        print("✅ SUCCESS: DR chat response completed")
+        print("="*60 + "\n")
+
         return history, updated_dashboard
 
     except Exception as e:
@@ -234,6 +253,11 @@ User message: {message}
 
 def confirm_dr(dashboard_content, progress=gr.Progress(track_tqdm=True)):
     """Phase 2 -> Phase 3: Confirm DR and Start UX Issue Evaluation"""
+    print("\n" + "="*60)
+    print("🔘 BUTTON CLICKED: Confirm DR and Start UX Issue Analysis")
+    print("⏳ STATUS: Starting UX Issue evaluation process...")
+    print("="*60 + "\n")
+
     progress(0, desc="Preparing UX Issue analysis...")
 
     phase_state["current"] = 3
@@ -272,7 +296,7 @@ Please conduct heuristic evaluation and generate UX issues JSON."""}
     # OpenAI Responses API call (using instructions parameter)
     try:
         response = client.responses.create(
-            model="gpt-5-nano",
+            model="gpt-4o",
             instructions=system_prompt,
             input=initial_input
         )
@@ -304,6 +328,10 @@ Please conduct heuristic evaluation and generate UX issues JSON."""}
             }
         ]
 
+        print("\n" + "="*60)
+        print("✅ SUCCESS: UX Issue evaluation completed")
+        print("="*60 + "\n")
+
         return (
             gr.update(visible=False),  # phase2 숨김
             gr.update(visible=True),   # phase3 표시
@@ -322,6 +350,12 @@ Please conduct heuristic evaluation and generate UX issues JSON."""}
 
 def chat_ux(message, history, dashboard_content):
     """Phase 3: Heuristic Evaluator와 대화"""
+    print("\n" + "="*60)
+    print("💬 CHAT INPUT SUBMITTED: Heuristic Evaluator")
+    print(f"⏳ STATUS: Processing user message...")
+    print(f"📝 Message: {message[:100]}..." if len(message) > 100 else f"📝 Message: {message}")
+    print("="*60 + "\n")
+
     if not message:
         return history, dashboard_content
 
@@ -356,7 +390,7 @@ User message: {message}
     # OpenAI Responses API 호출 (instructions 파라미터 사용)
     try:
         response = client.responses.create(
-            model="gpt-5-nano",
+            model="gpt-4o",
             instructions=system_prompt,
             input=input_messages
         )
@@ -379,6 +413,10 @@ User message: {message}
         history.append({"role": "user", "content": message})
         history.append({"role": "assistant", "content": chat_message})
 
+        print("\n" + "="*60)
+        print("✅ SUCCESS: UX chat response completed")
+        print("="*60 + "\n")
+
         return history, updated_dashboard
 
     except Exception as e:
@@ -389,6 +427,11 @@ User message: {message}
 
 def download_ux_issues(dashboard_content):
     """UX 이슈 다운로드"""
+    print("\n" + "="*60)
+    print("🔘 BUTTON CLICKED: Download UX Issues")
+    print("⏳ STATUS: Preparing download file...")
+    print("="*60 + "\n")
+
     import tempfile
     import json
 
@@ -406,13 +449,27 @@ def download_ux_issues(dashboard_content):
         else:
             json.dump(dashboard_content, f, indent=2, ensure_ascii=False)
 
+        print("\n" + "="*60)
+        print("✅ SUCCESS: Download file prepared")
+        print(f"📁 File path: {f.name}")
+        print("="*60 + "\n")
+
         return f.name
 
 def reset_app():
     """앱 초기화"""
+    print("\n" + "="*60)
+    print("🔘 BUTTON CLICKED: Reset")
+    print("⏳ STATUS: Resetting application to initial state...")
+    print("="*60 + "\n")
+
     phase_state["current"] = 1
     phase_state["images"] = None
     phase_state["dr_json"] = None
+
+    print("\n" + "="*60)
+    print("✅ SUCCESS: Application reset completed")
+    print("="*60 + "\n")
 
     return (
         gr.update(visible=True),   # phase1 표시
